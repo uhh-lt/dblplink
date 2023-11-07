@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+        banerjee_arefa_dblplink_elasticsearch:
+               image: elasticsearch:8.2.2
+               environment:
+                       - discovery.type=single-node
+                       - ES_JAVA_OPTS=-Xms2g -Xmx30g
+                       - xpack.security.enabled=false
+                       - cluster.routing.allocation.disk.watermark.low=30mb
+                       - cluster.routing.allocation.disk.watermark.high=20mb
+                       - cluster.routing.allocation.disk.watermark.flood_stage=10mb
+                       - cluster.info.update.interval=1m
+               volumes:
+                       - ./es_data:/usr/share/elasticsearch/data 
+               networks:
+                       - dblplink
+      
+        banerjee_arefa_dblplink_api:
+                build:
+                        context: ./api
+                        dockerfile: Dockerfile
+                ports:
+                        - "5003:5000"
+                networks: 
+                        - dblplink
+
+        banerjee_arefa_dblplink_streamlit:
+                build:
+                        context: ./ui
+                        dockerfile: Dockerfile
+                environment:
+                        - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+                        - STREAMLIT_SERVER_ENABLECORS=false
+                        - STREAMLIT_SERVER_ENABLE_CORS=false
+                        - STREAMLIT_SERVER_BASEURLPATH=/dblplink
+                        - STREAMLIT_SERVER_BASE_URL_PATH=/dblplink
+                ports:
+                        - "8503:8501"
+                networks: 
+                  - dblplink
+networks:
+        dblplink:
+                driver: bridge
+          

@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  banerjee_entity_reranker_api:
+    build:
+      context: ./
+      dockerfile: Dockerfile 
+    ports:
+      - 5001:5001
+    network_mode: host

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+        banerjee_arefa_dblplink_api:
+                build:
+                        context: ./
+                        dockerfile: Dockerfile
+                ports:
+                        - "5003:5000"
+                networks: 
+                        - dblplink
+networks:
+        dblplink:
+                driver: bridge
+          
